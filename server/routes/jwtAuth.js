@@ -1,6 +1,8 @@
 import express from "express";
 import { getDbPool } from "../db.js";
 import bcrypt from "bcrypt";
+import { jwtGenerator } from "../utils/jwtGenerators.js";
+
 const router = express.Router();
 
 const pool = getDbPool();
@@ -26,7 +28,9 @@ router.post("/register", async (req, res) => {
       [name, email, bcryptPassword]
     );
 
-    res.json(newUser.rows);
+    const token = jwtGenerator(newUser.rows[0].user_id);
+
+    res.json({ token });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Server Error");
