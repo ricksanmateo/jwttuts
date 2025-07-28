@@ -2,12 +2,13 @@ import express from "express";
 import { getDbPool } from "../db.js";
 import bcrypt from "bcrypt";
 import { jwtGenerator } from "../utils/jwtGenerators.js";
+import { validInfo } from "../middleware/validInfo.js";
 
 const router = express.Router();
 
 const pool = getDbPool();
 
-router.post("/register", async (req, res) => {
+router.post("/register", validInfo, async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
@@ -37,7 +38,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", validInfo, async (req, res) => {
   try {
     const { email, password } = req.body;
 
