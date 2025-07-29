@@ -3,6 +3,7 @@ import { getDbPool } from "../db.js";
 import bcrypt from "bcrypt";
 import { jwtGenerator } from "../utils/jwtGenerators.js";
 import { validInfo } from "../middleware/validInfo.js";
+import { authorization } from "../middleware/authorization.js";
 
 const router = express.Router();
 
@@ -61,6 +62,15 @@ router.post("/login", validInfo, async (req, res) => {
 
     const token = jwtGenerator(user.rows[0].user_id);
     res.json({ token });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+router.get("is-verify", authorization, async (req, res) => {
+  try {
+    res.json(true);
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Server Error");
